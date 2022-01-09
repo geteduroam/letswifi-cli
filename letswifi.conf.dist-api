@@ -1,0 +1,6 @@
+# Configuration file for letswifi-client
+
+method="api"
+base_url="http://[::1]:1080"
+client_id="eu.letswifi.cli"
+client_secret="#s3cret"

@@ -1,0 +1,6 @@
+# Configuration file for letswifi-client
+
+method="ssh"
+ssh_host="letswifi.example.com"
+letswifi_basepath="/usr/local/share/letswifi-ca"
+realm="example.com"

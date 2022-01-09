@@ -1,0 +1,5 @@
+# Configuration file for letswifi-client
+
+method="local"
+letswifi_basepath="/usr/local/share/letswifi-ca"
+realm="example.com"

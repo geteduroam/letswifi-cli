@@ -1,0 +1,54 @@
+#!/bin/sh
+set -e
+. "$(dirname "$0")/letswifi.conf"
+
+case $method in
+	api)
+		command=admin
+		curlflags=
+		flagging=0
+		for arg in "$@"
+		do
+			if test $flagging -eq 1 -o 'x-' == "x$(printf %c "$arg")"
+			then
+				flagging=1
+				curlflags=--data-urlencode$'\r'"$(printf %s "$arg" | sed -es/^--//)"$'\r'"$curlflags"
+			else
+				command="$command/$arg"
+			fi
+		done
+
+		access_token="$("$(dirname "$0")/get-token.sh" $(printf %s "$command" | sed -es@/@-@g))"
+		url="$base_url/$command$flags"
+		data="$(printf %s%s "$curlflags" "$url" | tr \\r \\0 | xargs -0 curl -sS -H"Authorization: Bearer $access_token")"
+		printf '# %s\n' "$url" >&2
+		if printf %s "$data" | jq >/dev/null 2>&1
+		then
+			filter="$(printf %s "$data" | jq -r .jq)"
+			if test "$filter" == null
+			then
+				printf %s "$data" | jq
+			else
+				if printf %s "$filter" | fgrep -q @
+				then
+					printf %s "$data" | jq -r "$filter"
+				else
+					printf %s "$data" | jq "$filter"
+				fi
+			fi
+		else
+			printf %s\\n "$data"
+		fi
+		;;
+	# Not tested yet:
+	#local)
+	#	"$letswifi_basepath/bin/cli.php" "$@"
+	#	;;
+	#ssh)
+	#	ssh "$ssh_host" "$letswifi_basepath"'/bin/cli.php '"$@"
+	#	;;
+	*)
+		echo Unknown connection method provided>&2
+		exit 2
+		;;
+esac
