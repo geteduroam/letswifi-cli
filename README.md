@@ -33,26 +33,32 @@ Otherwise, you can set the realm by adding `--realm=example.com` after the comma
 
 ### Commands
 
-#### ./letswifi user list
+The global `--raw` flag prevents pretty-printing of the JSON reply using [`jq`](https://stedolan.github.io/jq/).
+Some data is omitted for pretty-printing, so if you want to see the raw response
+as returned by the server, use `--raw`.  The flag is implicit if `jq` is not available.
+
+#### `./letswifi [ --raw ] user list`
 
 Returns a list of all users that currently have valid certificates.
 
-#### ./letswifi user get --user=USERNAME
+#### `./letswifi [ --raw ] user get --user=USERNAME`
 
 Returns a list of certificates for this user.
 
-#### ./letswifi user get --subject=SUBJECT
+#### `./letswifi [ --raw ] user get --subject=SUBJECT`
 
 Get a single certificate, this will also show the USERNAME that owns this certificate.
 
-#### ./letswifi ca index --ca=SUBJECT
+#### `./letswifi ca index --ca=SUBJECT`
 
 Get the CA index.txt file, which can be used to generate a CRL, or run a local OCSP responder.
 
-#### ./letswifi ca revoke --user=USERNAME
+Since the payload is not JSON, `--raw` will not have any effect.
+
+#### `./letswifi ca revoke --user=USERNAME`
 
 Revoke ALL certificates for USERNAME.
 
-#### ./letswifi ca revoke --subject=SUBJECT
+#### `./letswifi [ --raw ] ca revoke --subject=SUBJECT`
 
 Remove the certificate with the given SUBJECT.

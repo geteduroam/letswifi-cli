@@ -4,16 +4,26 @@ set -e
 
 case $method in
 	api)
+		command -v jq >/dev/null && raw=0 || raw=1
+
 		command=admin
 		curlflags=
 		flagging=0
+		globalflagging=1
 		for arg in "$@"
 		do
+			if test $globalflagging -eq 1 -a 'x--raw' == "x$(printf %s "$arg")"
+			then
+				raw=1
+				continue
+			fi
 			if test $flagging -eq 1 -o 'x-' == "x$(printf %c "$arg")"
 			then
+				globalflagging=0
 				flagging=1
 				curlflags=--data-urlencode$'\r'"$(printf %s "$arg" | sed -es/^--//)"$'\r'"$curlflags"
 			else
+				globalflagging=0
 				command="$command/$arg"
 			fi
 		done
@@ -22,7 +32,7 @@ case $method in
 		url="$base_url/$command/$flags"
 		data="$(printf %s%s "$curlflags" "$url" | tr \\r \\0 | xargs -0 curl -sS -H"Authorization: Bearer $access_token")"
 		printf '# %s\n' "$url" >&2
-		if printf %s "$data" | jq >/dev/null 2>&1
+		if test "$raw" -eq 0 && printf %s "$data" | jq >/dev/null 2>&1
 		then
 			filter="$(printf %s "$data" | jq -r .jq)"
 			if test "$filter" == null
