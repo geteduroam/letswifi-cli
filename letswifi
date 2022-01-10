@@ -19,7 +19,7 @@ case $method in
 		done
 
 		access_token="$("$(dirname "$0")/get-token.sh" $(printf %s "$command" | sed -es@/@-@g))"
-		url="$base_url/$command$flags"
+		url="$base_url/$command/$flags"
 		data="$(printf %s%s "$curlflags" "$url" | tr \\r \\0 | xargs -0 curl -sS -H"Authorization: Bearer $access_token")"
 		printf '# %s\n' "$url" >&2
 		if printf %s "$data" | jq >/dev/null 2>&1
