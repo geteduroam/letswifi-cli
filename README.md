@@ -41,6 +41,10 @@ Returns a list of all users that currently have valid certificates.
 
 Returns a list of certificates for this user.
 
+#### ./letswifi user get --subject=SUBJECT
+
+Get a single certificate, this will also show the USERNAME that owns this certificate.
+
 #### ./letswifi ca index --ca=SUBJECT
 
 Get the CA index.txt file, which can be used to generate a CRL, or run a local OCSP responder.
