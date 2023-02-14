@@ -1,7 +1,9 @@
 # Let's Wifi client scripts
 
-This is a simple CLI for administrating the [Let's Wi-Fi server](https://github.com/letswifi/letswifi-portal).
-It will currently not work with the geteduroam Let's Wi-Fi server.
+This is a simple CLI for administrating the [geteduroam](https://github.com/letswifi/letswifi-portal).
+This client is still a work in progress!
+
+Instead, for now, make modifications directly to the database.
 
 ## Configure the server
 
